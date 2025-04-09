@@ -1,14 +1,12 @@
+
 import Image from "next/image";
-import { stripe } from "@/lib/stripe";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Carousel } from "@/components/carousel";
+import {getProducts} from "@/lib/stripe-server"; 
 
 export default async function Home() {
-  const products = await stripe.products.list({
-    expand: ["data.default_price"],
-    limit: 5,
-  });
+  const products = await getProducts(5);
 
   return (
     <div>
@@ -36,7 +34,7 @@ export default async function Home() {
           </div>
           <Image
             alt="Hero Image"
-            src={products.data[0].images[0]}
+            src={products[0].images[0]}
             className="rounded"
             width={450}
             height={450}
@@ -44,7 +42,7 @@ export default async function Home() {
         </div>
       </section>
       <section className="py-8">
-        <Carousel />
+        <Carousel products={products} />
       </section>
     </div>
   );
